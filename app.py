@@ -6,9 +6,12 @@ import os
 app = Flask(__name__)
 Bootstrap(app)
 
-@app.route('/')
-def hello_world():
-    return render_template("index.html")
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'GET':
+        return render_template("index.html")
+    else:
+        return render_template("rand.html")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

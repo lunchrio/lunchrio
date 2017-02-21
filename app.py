@@ -1,8 +1,10 @@
 from flask import Flask
 from flask import render_template
 from flask_bootstrap import Bootstrap
+import os
 
-app = Bootstrap(Flask(__name__))
+app = Flask(__name__)
+Bootstrap(app)
 
 @app.route('/')
 def hello_world():

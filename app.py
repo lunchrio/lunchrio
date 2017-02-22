@@ -7,6 +7,7 @@ import sqlite3
 from flask import g
 from collections import defaultdict
 import random
+import json
 
 
 import logging
@@ -68,6 +69,11 @@ def delete():
 def list_():
     return render_template("list.html", rows=get_from_db())
     #return render_template("list.html", rows=[[1, 'veeruska']])
+
+@app.route('/api/v1/data')
+def data_get():
+    return data_to_json()
+
 
 def save_to_db(form):
     con = get_db()
@@ -155,6 +161,20 @@ def wrandom(dick):
             break
 
     return choice
+
+def data_to_json():
+    rows = get_from_db()
+    the_d = defaultdict(dict)
+
+    for row in rows:
+        the_d[row['nimi']]['tasalaatuisuus'] = row['tasalaatuisuus']
+        the_d[row['nimi']]['parkkipaikka'] = row['parkkipaikka']
+        the_d[row['nimi']]['palvelu'] = row['palvelu']
+        the_d[row['nimi']]['hinta'] = row['hinta']
+        the_d[row['nimi']]['bonus'] = row['bonus']
+        the_d[row['nimi']]['painotus'] = sum(the_d[row['nimi']].values())
+
+    return json.dumps(the_d)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

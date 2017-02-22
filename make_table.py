@@ -16,5 +16,6 @@ cur.execute("""CREATE TABLE ominaisuudet(paikka INTEGER,
                 bonus INTEGER,
                 FOREIGN KEY(paikka) REFERENCES paikat(id))""")
 
-cur.commit()
+#cur.commit()
+con.commit()
 cur.close()

@@ -49,7 +49,7 @@ def index():
     if request.method == 'GET':
         return render_template("index.html")
     else:
-        return render_template("rand.html", voittaja=get_rand())
+        return render_template("rand.html", voittaja=get_rand(request.form.get('kiirus')))
         
 @app.route('/add', methods=['GET', 'POST'])
 def add():
@@ -124,11 +124,15 @@ def delete_with_id(id):
 
     con.commit()
 
-def get_rand():
+def get_rand(kiirus):
+    if kiirus == None:
+        kiirus = 0
     rows = get_from_db()
     hashi = defaultdict(dict)
 
     for row in rows:
+        if (int(kiirus) == 1) and (row['kaukana'] == 1):
+            continue
         hashi[row['nimi']]['value'] = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu'] + \
         row['hinta'] + row['bonus']
 

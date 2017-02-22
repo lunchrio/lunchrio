@@ -5,6 +5,10 @@ from flask_bootstrap import Bootstrap
 import os
 import sqlite3
 from flask import g
+import sys
+
+import logging
+from logging.handlers import RotatingFileHandler
 
 DATABASE = 'ruoka.db'
 
@@ -45,6 +49,7 @@ def add():
 @app.route('/list')
 def list_():
     return render_template("list.html", rows=get_from_db())
+    #return render_template("list.html", rows=[[1, 'veeruska']])
 
 def save_to_db(form):
     con = get_db()
@@ -57,7 +62,7 @@ def save_to_db(form):
     hinta = form.get('hinta')
     kaukana = form.get('kaukana') or False
 
-    cur.execute("INSERT INTO paikat(nimi) VALUES(?)", (name))
+    cur.execute("INSERT INTO paikat(nimi) VALUES(?)", (name,))
     id_ = cur.lastrowid
     cur.execute("INSERT INTO matka VALUES(?,?)", (id_, kaukana))
     cur.execute("INSERT INTO ominaisuudet VALUES(?,?,?,?,?,?)", (id_, laatu, parkki, palvelu, hinta, bonus))
@@ -69,6 +74,8 @@ def get_from_db():
     
     cur.execute("SELECT * FROM paikat")
     rows = cur.fetchall()
+    app.logger.info('Info')
+    print(rows[0], file=sys.stderr)
     return rows
 
 def make_dicts(cursor, row):
@@ -77,4 +84,7 @@ def make_dicts(cursor, row):
         
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='127.0.0.1', port=5002)
+    handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
+    app.run(host='127.0.0.1', port=5002, debug=True)

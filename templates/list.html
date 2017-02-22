@@ -4,9 +4,10 @@
 {% block mycontent %}
   <!--suppress LossyEncoding -->
 <h1>Lista ruokapaikoista</h1>
+
 <ul>
     {% for row in rows %}
-<li>{{rows['nimi']}}</li>
+<li>{{row[0]}} | {{row[1]}}</li>
     {% endfor %}
 </ul>
 {% endblock mycontent %}

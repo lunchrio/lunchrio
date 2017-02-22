@@ -5,12 +5,17 @@ from flask_bootstrap import Bootstrap
 import os
 import sqlite3
 from flask import g
-import sys
+
 
 import logging
 from logging.handlers import RotatingFileHandler
 
-DATABASE = 'ruoka.db'
+dev = bool(os.getenv('DEV', False))
+
+if dev:
+    DATABASE = 'ruoka.db'
+else:
+    DATABASE = os.getenv('DATABASE_URL')
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -102,7 +107,7 @@ def make_dicts(cursor, row):
         
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    dev = bool(os.getenv('DEV', False))
+
 
     handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)

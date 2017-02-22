@@ -80,13 +80,15 @@ def save_to_db(form):
     kaukana = form.get('kaukana') or False
 
     if dev:
-        cur.execute("INSERT INTO paikat(nimi) VALUES(%s)", (name,))
+        cur.execute("INSERT INTO paikat(nimi) VALUES(?)", (name,))
         id_ = cur.lastrowid
+        cur.execute("INSERT INTO matka VALUES(?,?)", (id_, int(kaukana)))
+        cur.execute("INSERT INTO ominaisuudet VALUES(?,?,?,?,?,?)", (id_, laatu, parkki, palvelu, hinta, bonus))
     else:
         cur.execute("INSERT INTO paikat(nimi) VALUES(%s) RETURNING id", (name,))
         id_ = cur.fetchone()[0]
-    cur.execute("INSERT INTO matka VALUES(%s,%s)", (id_, int(kaukana)))
-    cur.execute("INSERT INTO ominaisuudet VALUES(%s,%s,%s,%s,%s,%s)", (id_, laatu, parkki, palvelu, hinta, bonus))
+        cur.execute("INSERT INTO matka VALUES(%s,%s)", (id_, int(kaukana)))
+        cur.execute("INSERT INTO ominaisuudet VALUES(%s,%s,%s,%s,%s,%s)", (id_, laatu, parkki, palvelu, hinta, bonus))
     con.commit()
     con.close()
 
@@ -115,9 +117,6 @@ def delete_with_id(id):
     cur.execute("DELETE FROM ominaisuudet WHERE paikka=?", (id,))
     con.commit()
 
-def make_dicts(cursor, row):
-    return dict((cursor.description[idx][0], value)
-                for idx, value in enumerate(row))
         
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
@@ -126,8 +125,5 @@ if __name__ == "__main__":
     handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
-    # if dev:
-    #     dev = True
-    # else:
-    #     dev = False
+
     app.run(host='127.0.0.1', port=5002, debug=True)

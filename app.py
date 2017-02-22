@@ -48,11 +48,19 @@ def list_():
 
 def save_to_db(form):
     con = get_db()
+    cur = con.cursor()
     name = form.get('name')
-    rating = form.get('rating')
+    laatu = form.get('laatu')
+    palvelu = form.get('palvelu')
+    parkki = form.get('parkki')
+    bonus = form.get('bonus')
+    hinta = form.get('hinta')
     kaukana = form.get('kaukana') or False
 
-    con.cursor().execute("INSERT INTO paikat VALUES(?,?,?)", (name, rating, kaukana))
+    cur.execute("INSERT INTO paikat(nimi) VALUES(?)", (name))
+    id_ = cur.lastrowid
+    cur.execute("INSERT INTO matka VALUES(?,?)", (id_, kaukana))
+    cur.execute("INSERT INTO ominaisuudet VALUES(?,?,?,?,?,?)", (id_, laatu, parkki, palvelu, hinta, bonus))
     con.commit()
     con.close()
 

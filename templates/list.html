@@ -2,16 +2,11 @@
 {% block title %}This is an example page{% endblock %}
 
 {% block mycontent %}
-  <h1>Lista ruokapaikoista</h1>
+  <!--suppress LossyEncoding -->
+<h1>Lista ruokapaikoista</h1>
+<ul>
     {% for row in rows %}
-    {% if row['kaukana'] == true %}
-      {% set kaukana = "kaukana" %}
-    {% else %}
-      {% set kaukana = "lähellä" %}
-    {% endif %}
-    <span>{{ row['nimi'] }}</span>&nbsp;<span>{{ row['pisteet'] }}</span>&nbsp;<span>{{ kaukana }}</span>
-
-    <br />
+<li>{{rows['nimi']}}</li>
     {% endfor %}
-
+</ul>
 {% endblock mycontent %}

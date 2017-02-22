@@ -8,17 +8,16 @@ con = psycopg2.connect(url)
 
 cur = con.cursor()
 
-cur.execute("CREATE TABLE paikat(id INTEGER PRIMARY KEY ASC, nimi TEXT)")
+cur.execute("CREATE TABLE paikat(id SERIAL PRIMARY KEY, nimi TEXT)")
 
-cur.execute("CREATE TABLE matka(paikka INTEGER, kaukana INTEGER, FOREIGN KEY(paikka) REFERENCES paikat(id))")
+cur.execute("CREATE TABLE matka(paikka INTEGER REFERENCES paikat(id), kaukana INTEGER)")
 
-cur.execute("""CREATE TABLE ominaisuudet(paikka INTEGER,
+cur.execute("""CREATE TABLE ominaisuudet(paikka INTEGER REFERENCES paikat(id),
                 tasalaatuisuus INTEGER,
                 parkkipaikka INTEGER,
                 palvelu INTEGER,
                 hinta INTEGER,
-                bonus INTEGER,
-                FOREIGN KEY(paikka) REFERENCES paikat(id))""")
+                bonus INTEGER)""")
 
 #cur.commit()
 con.commit()

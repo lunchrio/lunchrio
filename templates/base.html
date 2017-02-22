@@ -36,6 +36,11 @@
                     will disappear! #}
     <link rel="stylesheet" type="text/css"
           href="{{url_for('static', filename='sample-app.css')}}">
+    <link rel="stylesheet" type="text/css"
+          href="{{url_for('static', filename='awesome-checkbox.css')}}">
+    <link rel="stylesheet" type="text/css"
+          href="{{url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css')}}">
+
 {% endblock %}
 
 {# Finally, round things out with navigation #}
@@ -55,7 +60,9 @@
           <!--a class="navbar-brand" href="#">Lunchrio</a-->
         </div>
         <div id="navbar" class="collapse navbar-collapse">
+
           <ul class="nav navbar-nav">
+              <li>&nbsp;</li>
             <li><a href="/">Arvo</a></li>
             <li><a href="/add">Lisää</a></li>
             <li><a href="/list">Lista</a></li>

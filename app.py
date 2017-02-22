@@ -79,10 +79,10 @@ def save_to_db(form):
     hinta = form.get('hinta')
     kaukana = form.get('kaukana') or False
 
-    cur.execute("INSERT INTO paikat(nimi) VALUES(?)", (name,))
+    cur.execute("INSERT INTO paikat(nimi) VALUES(%s)", (name,))
     id_ = cur.lastrowid
-    cur.execute("INSERT INTO matka VALUES(?,?)", (id_, kaukana))
-    cur.execute("INSERT INTO ominaisuudet VALUES(?,?,?,?,?,?)", (id_, laatu, parkki, palvelu, hinta, bonus))
+    cur.execute("INSERT INTO matka VALUES(%s,%s)", (id_, kaukana))
+    cur.execute("INSERT INTO ominaisuudet VALUES(%s,%s,%s,%s,%s,%s)", (id_, laatu, parkki, palvelu, hinta, bonus))
     con.commit()
     con.close()
 

@@ -83,7 +83,8 @@ def get_from_db():
 
     cur.execute(qry)
     rows = cur.fetchall()
-    #app.logger.info('Info')
+
+    app.logger.info(dev)
     return rows
 
 def delete_with_id(id):
@@ -101,7 +102,13 @@ def make_dicts(cursor, row):
         
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+    dev = bool(os.getenv('DEV', False))
+
     handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
+    # if dev:
+    #     dev = True
+    # else:
+    #     dev = False
     app.run(host='127.0.0.1', port=5002, debug=True)

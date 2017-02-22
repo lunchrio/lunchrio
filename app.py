@@ -15,6 +15,8 @@ dev = bool(os.getenv('DEV', False))
 if dev:
     DATABASE = 'ruoka.db'
 else:
+    import psycopg2
+    import psycopg2.extras
     DATABASE = os.getenv('DATABASE_URL')
 
 app = Flask(__name__)
@@ -23,10 +25,15 @@ Bootstrap(app)
 # connection = sqlite3.connect("ruoka.db")
 
 def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-    db.row_factory = sqlite3.Row
+    if dev:
+        db = getattr(g, '_database', None)
+        if db is None:
+            db = g._database = sqlite3.connect(DATABASE)
+        db.row_factory = sqlite3.Row
+    else:
+        db = getattr(g, '_database', None)
+        if db is None:
+            db = g._database = psycopg2.connect(DATABASE)
     return db
 
 @app.teardown_appcontext
@@ -80,7 +87,10 @@ def save_to_db(form):
     con.close()
 
 def get_from_db():
-    cur = get_db().cursor()
+    if dev:
+        cur = get_db().cursor()
+    else:
+        cur = cur = get_db().cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     qry = """select * FROM paikat
                 INNER JOIN matka on paikat.id=matka.paikka

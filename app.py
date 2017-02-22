@@ -79,8 +79,12 @@ def save_to_db(form):
     hinta = form.get('hinta')
     kaukana = form.get('kaukana') or False
 
-    cur.execute("INSERT INTO paikat(nimi) VALUES(%s)", (name,))
-    id_ = cur.lastrowid
+    if dev:
+        cur.execute("INSERT INTO paikat(nimi) VALUES(%s)", (name,))
+        id_ = cur.lastrowid
+    else:
+        cur.execute("INSERT INTO paikat(nimi) VALUES(%s) RETURNING id", (name,))
+        id_ = cur.fetchone()[0]
     cur.execute("INSERT INTO matka VALUES(%s,%s)", (id_, int(kaukana)))
     cur.execute("INSERT INTO ominaisuudet VALUES(%s,%s,%s,%s,%s,%s)", (id_, laatu, parkki, palvelu, hinta, bonus))
     con.commit()

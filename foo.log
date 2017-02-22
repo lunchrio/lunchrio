@@ -84,3 +84,192 @@ True
 True
 defaultdict(<class 'dict'>, {'Test': 25, 'Evin kebab': 15, 'Vaaleanpunainen elefantti': 23, 'Veeruska': 18})
 True
+True
+defaultdict(<class 'dict'>, {'Vaaleanpunainen elefantti': {'value': 23}, 'Veeruska': {'value': 18}, 'Test': {'value': 25}, 'Evin kebab': {'value': 15}})
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+defaultdict(<class 'dict'>, {'Suuri tsänssi': {'value': 8}, 'pieni tsänssi': {'value': 2}})
+True
+True
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+3
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+randn: 
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+randn: 
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pienin ': {'value': 1}, 'pieni tsänssi': {'value': 2}})
+randn: 1
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pienin ': {'value': 1}, 'pieni tsänssi': {'value': 2}})
+randn: 2
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pienin ': {'value': 1}, 'pieni tsänssi': {'value': 2}})
+randn: 2
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pienin ': {'value': 1}, 'pieni tsänssi': {'value': 2}})
+randn: 2
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pienin ': {'value': 1}, 'pieni tsänssi': {'value': 2}})
+randn: 0
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pienin ': {'value': 1}, 'pieni tsänssi': {'value': 2}})
+randn: 0
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pienin ': {'value': 1}, 'pieni tsänssi': {'value': 2}})
+randn: 0
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pienin ': {'value': 1}, 'pieni tsänssi': {'value': 2}})
+randn: 3
+sum_: 3
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'pienin ': {'value': 1}})
+True
+True
+True
+True
+True
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+defaultdict(<class 'dict'>, {'pieni tsänssi': {'value': 2}, 'Iso tsänssi': {'value': 8}})
+True
+True

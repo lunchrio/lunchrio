@@ -6,7 +6,7 @@ import os
 import sqlite3
 from flask import g
 from collections import defaultdict
-from random import choice
+import random
 
 
 import logging
@@ -106,7 +106,6 @@ def get_from_db():
     cur.execute(qry)
     rows = cur.fetchall()
 
-    app.logger.info(dev)
     return rows
 
 def delete_with_id(id):
@@ -130,12 +129,29 @@ def get_rand():
     hashi = defaultdict(dict)
 
     for row in rows:
-        hashi[row['nimi']] = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu'] + \
+        hashi[row['nimi']]['value'] = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu'] + \
         row['hinta'] + row['bonus']
 
-    app.logger.info(hashi)
-    return choice(list(hashi.keys()))
-        #(id_, laatu, parkki, palvelu, hinta, bonus))
+    return wrandom(hashi)
+
+
+def wrandom(dick):
+    sum_ = 0
+    for name in dick.keys():
+        sum_ += dick[name]['value']
+        dick[name]['threshold'] = sum_
+
+    randn = random.randint(0, sum_ - 1)
+
+
+    choice = None
+    for key, val in dick.items():
+        if randn < val['threshold']:
+            choice = key
+            break
+
+    return choice
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
 

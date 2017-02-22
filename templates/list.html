@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+{% block mycontent %}
+  <h1>Lista ruokapaikoista</h1>
+    {% for row in rows %}
+    {% if row['kaukana'] == true %}
+      {% set kaukana = "kaukana" %}
+    {% else %}
+      {% set kaukana = "lähellä" %}
+    {% endif %}
+    <span>{{ row['nimi'] }}</span>&nbsp;<span>{{ row['pisteet'] }}</span>&nbsp;<span>{{ kaukana }}</span>
+
+    <br />
+    {% endfor %}
+
+{% endblock mycontent %}

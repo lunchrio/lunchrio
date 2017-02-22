@@ -1,0 +1,35 @@
+
+{% extends "base.html" %}
+{% block title %}Add a place{% endblock %}
+
+
+{% block mycontent %}
+  {% if method=='GET' %}
+    <h1>Form - add</h1>
+    <form action="/add" method="POST">
+      <div class="form-group form-inline">
+        <label for="place">Paikan nimi:</label>
+        <input class="form-control" type="text" name="name" id="place" required>
+      </div>
+      <div class="form-group form-inline">
+          <label for="rating" >Arvosana:</label>
+          <input class="form-control" type="number" name="rating" id="rating" required>
+      </div>
+
+      <div class="checkbox">
+        <label><input name="kaukana" type="checkbox" value="1" />Kaukana?</label>
+      </div>
+
+      <input type="submit" value="subumitu" />
+    </form>
+  {% else %}
+      <h1>Thank you for your input</h1>
+      <p><b>Paikan nimi:</b> {{ values["name"] }}</p>
+      <p><b>Arvosana:</b> {{ values["rating"] }} tähteä</p>
+      {% if "kaukana" in values %}
+        <p><b>Kaukana vai lähellä?</b> kaukana</p>
+      {% else %}
+        </p><b>Kaukana vai lähellä?</b> lähellä</p>
+      {% endif %}
+  {% endif %}
+{% endblock mycontent %}

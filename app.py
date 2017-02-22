@@ -91,6 +91,8 @@ def delete_with_id(id):
     cur = con.cursor()
 
     cur.execute("DELETE FROM paikat WHERE id=?", (id,))
+    cur.execute("DELETE FROM matka WHERE paikka=?", (id,))
+    cur.execute("DELETE FROM ominaisuudet WHERE paikka=?", (id,))
     con.commit()
 
 def make_dicts(cursor, row):

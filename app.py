@@ -5,6 +5,8 @@ from flask_bootstrap import Bootstrap
 import os
 import sqlite3
 from flask import g
+from collections import defaultdict
+from random import choice
 
 
 import logging
@@ -47,8 +49,7 @@ def index():
     if request.method == 'GET':
         return render_template("index.html")
     else:
-        p_name = request.form.get('submit')
-        return render_template("rand.html", jepa=p_name)
+        return render_template("rand.html", voittaja=get_rand())
         
 @app.route('/add', methods=['GET', 'POST'])
 def add():
@@ -124,7 +125,17 @@ def delete_with_id(id):
 
     con.commit()
 
-        
+def get_rand():
+    rows = get_from_db()
+    hashi = defaultdict(dict)
+
+    for row in rows:
+        hashi[row['nimi']] = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu'] + \
+        row['hinta'] + row['bonus']
+
+    app.logger.info(hashi)
+    return choice(list(hashi.keys()))
+        #(id_, laatu, parkki, palvelu, hinta, bonus))
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
 

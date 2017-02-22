@@ -4,10 +4,36 @@
 {% block mycontent %}
   <!--suppress LossyEncoding -->
 <h1>Lista ruokapaikoista</h1>
-
-<ul>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nimi</th>
+            <th>Etäisyys</th>
+            <th>Tasalaatuisuus</th>
+            <th>Parkkipaikka</th>
+            <th>Palvelu</th>
+            <th>Hinta</th>
+            <th>Bonus</th>
+            <th>Painotus</th>
+            <th>Poista</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for row in rows %}
-<li>{{row[0]}} | {{row[1]}}</li>
+    {% set score = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu']
+    + row['hinta'] + row['bonus'] %}
+    <tr>
+        <td>{{ row['nimi'] }}</td>
+        <td>{{row['kaukana']}}</td>
+        <td>{{row['tasalaatuisuus']}}</td>
+        <td>{{row['parkkipaikka']}}</td>
+        <td>{{row['palvelu']}}</td>
+        <td>{{row['hinta']}}</td>
+        <td>{{row['bonus']}}</td>
+        <td>{{ score }}</td>
+        <td><a href="delete?id={{row['id']}}">X</a> </td>
+    </tr>
     {% endfor %}
-</ul>
+    </tbody>
+</table>
 {% endblock mycontent %}

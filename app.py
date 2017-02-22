@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 import os
 import sqlite3
@@ -46,6 +46,11 @@ def add():
         save_to_db(request.form)
         return render_template("add.html", method='POST', values=request.form)
 
+@app.route('/delete', methods=['GET'])
+def delete():
+    delete_with_id(request.args.get('id'))
+    return redirect(url_for('list_'))
+
 @app.route('/list')
 def list_():
     return render_template("list.html", rows=get_from_db())
@@ -71,12 +76,22 @@ def save_to_db(form):
 
 def get_from_db():
     cur = get_db().cursor()
-    
-    cur.execute("SELECT * FROM paikat")
+
+    qry = """select * FROM paikat
+                INNER JOIN matka on paikat.id=matka.paikka
+                INNER JOIN ominaisuudet ON paikat.id=ominaisuudet.paikka """
+
+    cur.execute(qry)
     rows = cur.fetchall()
-    app.logger.info('Info')
-    print(rows[0], file=sys.stderr)
+    #app.logger.info('Info')
     return rows
+
+def delete_with_id(id):
+    con = get_db()
+    cur = con.cursor()
+
+    cur.execute("DELETE FROM paikat WHERE id=?", (id,))
+    con.commit()
 
 def make_dicts(cursor, row):
     return dict((cursor.description[idx][0], value)

@@ -1,6 +1,10 @@
-import sqlite3
+#import sqlite3
+import psycopg2
+import os
 
-con = sqlite3.connect("ruoka.db")
+url = os.getenv('DATABASE_URL')
+
+con = psycopg2.connect(url)
 
 cur = con.cursor()
 

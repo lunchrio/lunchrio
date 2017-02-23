@@ -22,13 +22,13 @@
         </thead>
         <tbody>
         {% for row in rows %}
-        {% set score = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu']
-        + row['hinta'] + row['bonus'] %}
+        {# set score = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu']
+        + row['hinta'] + row['bonus'] #}
         {% set kesto = "<a href='/reset?id=%s' >%s</a>"|format(row['id'], row['kesto'])|safe if row['kesto'] is not none else '0' %}
         <tr>
-            <td>{{ row['nimi'] }}</td>
-            <td>{{row['kaukana']}}</td>
-            <td>{{row['tasalaatuisuus']}}</td>
+            <td>{{ row.nimi }}</td>
+            <td>{{row.etaisyys.kaukana}}</td>
+            <td>{{row.ominaisuudet.tasalaatuisuus}}</td>
             <td>{{row['parkkipaikka']}}</td>
             <td>{{row['palvelu']}}</td>
             <td>{{row['hinta']}}</td>

@@ -16,6 +16,8 @@ from functools import wraps
 import logging
 from logging.handlers import RotatingFileHandler
 
+from models import Kayttaja, Paikka, Ominaisuudet, Etaisyys, Jaahy
+
 dev = bool(os.getenv('DEV', False))
 
 if dev:
@@ -162,20 +164,8 @@ def save_to_db(form):
     con.close()
 
 def get_from_db():
-    if dev:
-        cur = get_db().cursor()
-    else:
-        cur = get_db().cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    qry = """select * FROM paikat
-                INNER JOIN matka on paikat.id=matka.paikka
-                INNER JOIN ominaisuudet ON paikat.id=ominaisuudet.paikka
-                LEFT OUTER JOIN jaahyt ON paikat.id=jaahyt.paikka """
-
-    cur.execute(qry)
-    rows = cur.fetchall()
-
-    return rows
+    return Paikka.select()
 
 def delete_with_id(id):
     con = get_db()

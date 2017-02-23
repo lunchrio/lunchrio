@@ -11,7 +11,6 @@ import os
 import sqlite3
 from collections import defaultdict
 import random
-import json
 from functools import wraps
 
 import logging

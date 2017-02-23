@@ -13,3 +13,7 @@ body {
 body {
     padding-bottom: 50px;
 }
+
+.glyphicon:hover {
+    cursor:help;
+}

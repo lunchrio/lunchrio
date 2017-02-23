@@ -25,7 +25,6 @@ else:
 app = Flask(__name__)
 Bootstrap(app)
 
-# connection = sqlite3.connect("ruoka.db")
 
 def get_db():
     if dev:

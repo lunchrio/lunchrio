@@ -188,11 +188,8 @@ def decrease_cooldowns():
     con = get_db()
     cur = con.cursor()
 
-    if dev:
-        cur.execute("UPDATE jaahyt SET kesto = kesto - 1")
-        cur.execute("DELETE FROM jaahyt WHERE kesto < 1")
-    else:
-        pass
+    cur.execute("UPDATE jaahyt SET kesto = kesto - 1")
+    cur.execute("DELETE FROM jaahyt WHERE kesto < 1")
 
     con.commit()
 
@@ -205,6 +202,11 @@ def set_cooldown(id, cd):
         SELECT * FROM (SELECT ?, ?) AS tmp
         WHERE NOT EXISTS (
             SELECT paikka FROM jaahyt WHERE paikka = ?) LIMIT 1""", (id, cd, id))
+    else:
+        cur.execute("""INSERT INTO jaahyt(paikka, kesto)
+        SELECT * FROM (SELECT %s, %s) AS tmp
+        WHERE NOT EXISTS (
+            SELECT paikka FROM jaahyt WHERE paikka = %s) LIMIT 1""", (id, cd, id))
 
     con.commit()
 
@@ -215,6 +217,9 @@ def reset_cd(id):
     if dev:
         cur.execute("""DELETE FROM jaahyt
         WHERE paikka=?""", (id,))
+    else:
+        cur.execute("""DELETE FROM jaahyt
+        WHERE paikka=%s""", (id,))
 
     con.commit()
 

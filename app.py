@@ -50,7 +50,11 @@ def index():
     if request.method == 'GET':
         return render_template("index.html")
     else:
-        return render_template("rand.html", voittaja=get_rand(request.form.get('kiirus')))
+        winner = get_rand(request.form.get('kiirus'))
+        decrease_cooldowns()
+        set_cooldown(winner['id'], 5)
+
+        return render_template("rand.html", voittaja=winner)
         
 @app.route('/add', methods=['GET', 'POST'])
 def add():
@@ -70,10 +74,25 @@ def list_():
     return render_template("list.html", rows=get_from_db())
     #return render_template("list.html", rows=[[1, 'veeruska']])
 
+@app.route('/update')
+def update():
+    decrease_cooldowns()
+    return render_template("list.html", rows=get_from_db())
+
+@app.route('/setcd/<int:id>')
+def set_cd(id):
+    set_cooldown(id, 5)
+    return render_template("list.html", rows=get_from_db())
+
+
 @app.route('/api/v1/data')
 def data_get():
     return data_to_json()
 
+@app.route('/reset')
+def reset():
+    reset_cd(request.args.get('id'))
+    return redirect(url_for('list_'))
 
 def save_to_db(form):
     con = get_db()
@@ -107,7 +126,8 @@ def get_from_db():
 
     qry = """select * FROM paikat
                 INNER JOIN matka on paikat.id=matka.paikka
-                INNER JOIN ominaisuudet ON paikat.id=ominaisuudet.paikka """
+                INNER JOIN ominaisuudet ON paikat.id=ominaisuudet.paikka
+                LEFT OUTER JOIN jaahyt ON paikat.id=jaahyt.paikka """
 
     cur.execute(qry)
     rows = cur.fetchall()
@@ -137,10 +157,12 @@ def get_rand(kiirus):
     hashi = defaultdict(dict)
 
     for row in rows:
-        if (int(kiirus) == 1) and (row['kaukana'] == 1):
+        if ((kiirus == 1) and (row['kaukana'] == 1)) or (row['kesto'] is not None):
             continue
         hashi[row['nimi']]['value'] = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu'] + \
         row['hinta'] + row['bonus']
+        hashi[row['nimi']]['id'] = row['id']
+        hashi[row['nimi']]['nimi'] = row['nimi']
 
     return wrandom(hashi)
 
@@ -160,7 +182,41 @@ def wrandom(dick):
             choice = key
             break
 
-    return choice
+    return dick[choice]
+
+def decrease_cooldowns():
+    con = get_db()
+    cur = con.cursor()
+
+    if dev:
+        cur.execute("UPDATE jaahyt SET kesto = kesto - 1")
+        cur.execute("DELETE FROM jaahyt WHERE kesto < 1")
+    else:
+        pass
+
+    con.commit()
+
+def set_cooldown(id, cd):
+    con = get_db()
+    cur = con.cursor()
+
+    if dev:
+        cur.execute("""INSERT INTO jaahyt(paikka, kesto)
+        SELECT * FROM (SELECT ?, ?) AS tmp
+        WHERE NOT EXISTS (
+            SELECT paikka FROM jaahyt WHERE paikka = ?) LIMIT 1""", (id, cd, id))
+
+    con.commit()
+
+def reset_cd(id):
+    con = get_db()
+    cur = con.cursor()
+
+    if dev:
+        cur.execute("""DELETE FROM jaahyt
+        WHERE paikka=?""", (id,))
+
+    con.commit()
 
 def data_to_json():
     rows = get_from_db()

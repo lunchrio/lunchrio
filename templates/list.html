@@ -16,6 +16,7 @@
                 <th>Hinta</th>
                 <th>Bonus</th>
                 <th>Painotus</th>
+                <th>Jäähy</th>
                 <th>Poista</th>
             </tr>
         </thead>
@@ -23,6 +24,7 @@
         {% for row in rows %}
         {% set score = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu']
         + row['hinta'] + row['bonus'] %}
+        {% set kesto = "<a href='/reset?id=%s' >%s</a>"|format(row['id'], row['kesto'])|safe if row['kesto'] is not none else '0' %}
         <tr>
             <td>{{ row['nimi'] }}</td>
             <td>{{row['kaukana']}}</td>
@@ -32,6 +34,7 @@
             <td>{{row['hinta']}}</td>
             <td>{{row['bonus']}}</td>
             <td>{{ score }}</td>
+            <td>{{ kesto }}</td>
             <td><a href="delete?id={{row['id']}}">X</a> </td>
         </tr>
         {% endfor %}

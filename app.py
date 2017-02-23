@@ -121,6 +121,7 @@ def reset():
 def data_get():
     return jsonify(data_to_json())
 
+
 @app.route('/api/v1/arvo/normaali')
 def arvo_normaali():
     voittaja = get_rand(None)
@@ -135,6 +136,7 @@ def arvo_kiirus():
     voittaja.pop('threshold')
     voittaja.pop('value')
     return jsonify(voittaja)
+
 
 def save_to_db(form):
     con = get_db()
@@ -164,7 +166,7 @@ def get_from_db():
     if dev:
         cur = get_db().cursor()
     else:
-        cur = cur = get_db().cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur = get_db().cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     qry = """select * FROM paikat
                 INNER JOIN matka on paikat.id=matka.paikka

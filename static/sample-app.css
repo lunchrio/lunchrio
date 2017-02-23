@@ -14,6 +14,6 @@ body {
     padding-bottom: 50px;
 }
 
-.glyphicon:hover {
+.glyphicon-info-sign:hover {
     cursor:help;
 }

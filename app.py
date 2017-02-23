@@ -83,15 +83,33 @@ def set_cd(id):
     set_cooldown(id, 5)
     return render_template("list.html", rows=get_from_db())
 
+@app.route('/reset')
+def reset():
+    reset_cd(request.args.get('id'))
+    return redirect(url_for('list_'))
+
+#################
+# API functions #
+#################
 
 @app.route('/api/v1/data')
 def data_get():
     return data_to_json()
 
-@app.route('/reset')
-def reset():
-    reset_cd(request.args.get('id'))
-    return redirect(url_for('list_'))
+@app.route('/api/v1/arvo/normaali')
+def arvo_normaali():
+    voittaja = get_rand(None)
+    voittaja.pop('threshold')
+    voittaja.pop('value')
+    return json.dumps(voittaja)
+
+
+@app.route('/api/v1/arvo/kiirus')
+def arvo_kiirus():
+    voittaja = get_rand(1)
+    voittaja.pop('threshold')
+    voittaja.pop('value')
+    return json.dumps(voittaja)
 
 def save_to_db(form):
     con = get_db()

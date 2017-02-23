@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
+from flask import Response, make_response
 from flask import render_template, request, redirect, url_for
+from flask import g
+from flask import jsonify
+
 from flask_bootstrap import Bootstrap
+
 import os
 import sqlite3
-from flask import g
 from collections import defaultdict
 import random
 import json
-
+from functools import wraps
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -24,6 +28,28 @@ else:
 
 app = Flask(__name__)
 Bootstrap(app)
+
+def add_response_headers(headers={}):
+    """This decorator adds the headers passed in to the response"""
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            resp = make_response(f(*args, **kwargs))
+            h = resp.headers
+            for header, value in headers.items():
+                h[header] = value
+            return resp
+        return decorated_function
+    return decorator
+
+
+def apiheaders(f):
+    """This decorator passes X-Robots-Tag: noindex"""
+    @wraps(f)
+    @add_response_headers({'Content-type': 'application/json'})
+    def decorated_function(*args, **kwargs):
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 def get_db():
@@ -71,17 +97,16 @@ def delete():
 @app.route('/list')
 def list_():
     return render_template("list.html", rows=get_from_db())
-    #return render_template("list.html", rows=[[1, 'veeruska']])
 
 @app.route('/update')
 def update():
     decrease_cooldowns()
-    return render_template("list.html", rows=get_from_db())
+    return redirect(url_for('list_'))
 
 @app.route('/setcd/<int:id>')
 def set_cd(id):
     set_cooldown(id, 5)
-    return render_template("list.html", rows=get_from_db())
+    return redirect(url_for('list_'))
 
 @app.route('/reset')
 def reset():
@@ -94,14 +119,14 @@ def reset():
 
 @app.route('/api/v1/data')
 def data_get():
-    return data_to_json()
+    return jsonify(data_to_json())
 
 @app.route('/api/v1/arvo/normaali')
 def arvo_normaali():
     voittaja = get_rand(None)
     voittaja.pop('threshold')
     voittaja.pop('value')
-    return json.dumps(voittaja)
+    return jsonify(voittaja)
 
 
 @app.route('/api/v1/arvo/kiirus')
@@ -109,7 +134,7 @@ def arvo_kiirus():
     voittaja = get_rand(1)
     voittaja.pop('threshold')
     voittaja.pop('value')
-    return json.dumps(voittaja)
+    return jsonify(voittaja)
 
 def save_to_db(form):
     con = get_db()
@@ -254,7 +279,7 @@ def data_to_json():
         the_d[row['nimi']]['bonus'] = row['bonus']
         the_d[row['nimi']]['painotus'] = sum(the_d[row['nimi']].values())
 
-    return json.dumps(the_d)
+    return the_d
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

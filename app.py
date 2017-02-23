@@ -141,9 +141,11 @@ def delete_with_id(id):
     if dev:
         cur.execute("DELETE FROM paikat WHERE id=?", (id,))
         cur.execute("DELETE FROM matka WHERE paikka=?", (id,))
+        cur.execute("DELETE FROM jaahyt WHERE paikka=?", (id,))
         cur.execute("DELETE FROM ominaisuudet WHERE paikka=?", (id,))
     else:
         cur.execute("DELETE FROM matka WHERE paikka=%s", (id,))
+        cur.execute("DELETE FROM jaahyt WHERE paikka=%s", (id,))
         cur.execute("DELETE FROM ominaisuudet WHERE paikka=%s", (id,))
         cur.execute("DELETE FROM paikat WHERE id=%s", (id,))
 

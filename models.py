@@ -1,8 +1,20 @@
 # coding=utf-8
 
 import peewee
+import os
 
-database = peewee.SqliteDatabase("ruoka_orm.db")
+dev = bool(os.getenv('DEV', False))
+
+if dev:
+    database = peewee.SqliteDatabase("ruoka_orm.db")
+else:
+    import urllib
+    from urllib.parse import urlparse
+    urllib.parse.uses_netloc.append('postgres')
+    url = urllib.parse.urlparse(os.getenv('DATABASE_URL'))
+    database = peewee.PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password,
+                                         host=url.hostname, port=url.port)
+
 
 class BaseModel(peewee.Model):
     """
@@ -14,6 +26,9 @@ class BaseModel(peewee.Model):
 class Kayttaja(BaseModel):
     """ORM Model for Kayttaja"""
     nimi = peewee.CharField(unique=True)
+
+    def to_json(self):
+        return {'nimi': self.nimi}
 
 
 class Paikka(BaseModel):
@@ -33,14 +48,14 @@ class Paikka(BaseModel):
 
     @property
     def etaisyys_suomeksi(self):
-        if self.etaisyys == True:
+        if self.etaisyys.kaukana == True:
             return 'Kaukana'
         else:
             return 'Lähellä'
 
     @property
     def jaahyn_kesto(self):
-        return self.jaahy_.get()
+        return self.jaahy_.get().kesto
 
     @property
     def jaahylla(self):
@@ -49,12 +64,26 @@ class Paikka(BaseModel):
         else:
             return False
 
+    def to_json(self):
+        # kayt = self.kayttaja.to_json()
+        return {'nimi': self.nimi,
+                'painotus': self.ominaisuudet.painotus,
+                'kayttaja': self.kayttaja.to_json(),
+                'ominaisuudet': self.ominaisuudet.to_json(),
+                'id': self.id
+                }
+
+
 class Etaisyys(BaseModel):
     """
     ORM Model for Etaisyys
     """
     kaukana = peewee.BooleanField()
     paikka = peewee.ForeignKeyField(Paikka, related_name="etaisyys_")
+
+    def to_json(self):
+        return {'kaukana': self.kaukana}
+
 
 class Ominaisuudet(BaseModel):
     """
@@ -71,6 +100,14 @@ class Ominaisuudet(BaseModel):
     def painotus(self):
         return self.tasalaatuisuus + self.parkkipaikka + self.palvelu + self.hinta + self.bonus
 
+    def to_json(self):
+        return {
+            'tasalaatuisuus': self.tasalaatuisuus,
+            'parkkipaikka': self.parkkipaikka,
+            'palvelu': self.palvelu,
+            'hinta': self.hinta,
+            'bonus': self.bonus
+        }
 
 class Jaahy(BaseModel):
     """ORM model for Jaahy"""
@@ -83,6 +120,11 @@ class Jaahy(BaseModel):
             return True
         else:
             return False
+
+    def to_json(self):
+        return {
+            'kesto': self.kesto
+        }
 
 if __name__ == "__main__":
     try:

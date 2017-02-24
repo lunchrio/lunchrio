@@ -24,7 +24,7 @@
         {% for row in rows %}
         {# set score = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu']
         + row['hinta'] + row['bonus'] #}
-        {% set kesto = "<a href='/reset?id=%s' >%s</a>"|format(row.id, row.jaahyn_kesto)|safe if not row.jaahylla else '0' %}
+        {% set kesto = "<a href='/reset?id=%s' >%s</a>"|format(row.id, row.jaahyn_kesto)|safe if row.jaahyn_kesto > 0 else '0' %}
         <tr>
             <td>{{ row.nimi }}</td>
             <td>{{row.etaisyys_suomeksi}}</td>

@@ -140,64 +140,42 @@ def arvo_kiirus():
 
 
 def save_to_db(form):
-    con = get_db()
-    cur = con.cursor()
-    name = form.get('name')
-    laatu = form.get('laatu')
-    palvelu = form.get('palvelu')
-    parkki = form.get('parkki')
-    bonus = form.get('bonus')
-    hinta = form.get('hinta')
-    kaukana = form.get('kaukana') or False
+    p = Paikka(nimi=form.get('name'), kayttaja=Kayttaja.get(id=1))
+    k = Etaisyys(kaukana=(form.get('kaukana') or False), paikka=p)
+    o = Ominaisuudet(tasalaatuisuus=form.get('laatu'), parkkipaikka=form.get('parkki'), bonus=form.get('bonus'),
+                     hinta=form.get('hinta'), palvelu=form.get('palvelu'), paikka=p)
+    j = Jaahy(paikka=p, kesto=0)
 
-    if dev:
-        cur.execute("INSERT INTO paikat(nimi) VALUES(?)", (name,))
-        id_ = cur.lastrowid
-        cur.execute("INSERT INTO matka VALUES(?,?)", (id_, int(kaukana)))
-        cur.execute("INSERT INTO ominaisuudet VALUES(?,?,?,?,?,?)", (id_, laatu, parkki, palvelu, hinta, bonus))
-    else:
-        cur.execute("INSERT INTO paikat(nimi) VALUES(%s) RETURNING id", (name,))
-        id_ = cur.fetchone()[0]
-        cur.execute("INSERT INTO matka VALUES(%s,%s)", (id_, int(kaukana)))
-        cur.execute("INSERT INTO ominaisuudet VALUES(%s,%s,%s,%s,%s,%s)", (id_, laatu, parkki, palvelu, hinta, bonus))
-    con.commit()
-    con.close()
+    p.save()
+    k.save()
+    o.save()
+    j.save()
 
 def get_from_db():
 
     return Paikka.select()
 
 def delete_with_id(id):
-    con = get_db()
-    cur = con.cursor()
 
-    if dev:
-        cur.execute("DELETE FROM paikat WHERE id=?", (id,))
-        cur.execute("DELETE FROM matka WHERE paikka=?", (id,))
-        cur.execute("DELETE FROM jaahyt WHERE paikka=?", (id,))
-        cur.execute("DELETE FROM ominaisuudet WHERE paikka=?", (id,))
-    else:
-        cur.execute("DELETE FROM matka WHERE paikka=%s", (id,))
-        cur.execute("DELETE FROM jaahyt WHERE paikka=%s", (id,))
-        cur.execute("DELETE FROM ominaisuudet WHERE paikka=%s", (id,))
-        cur.execute("DELETE FROM paikat WHERE id=%s", (id,))
+    p = Paikka.get(id=id)
+    p.delete_instance(recursive=True)
 
 
-    con.commit()
 
 def get_rand(kiirus):
     if kiirus == None:
         kiirus = 0
     rows = get_from_db()
+    app.logger.info(rows)
     hashi = defaultdict(dict)
 
     for row in rows:
-        if ((kiirus == 1) and (row['kaukana'] == 1)) or (row['kesto'] is not None):
-            continue
-        hashi[row['nimi']]['value'] = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu'] + \
-        row['hinta'] + row['bonus']
-        hashi[row['nimi']]['id'] = row['id']
-        hashi[row['nimi']]['nimi'] = row['nimi']
+        if ((int(kiirus) == 1 and row.etaisyys.kaukana) or (row.jaahyn_kesto > 0)):
+            pass
+        else:
+            hashi[row.nimi]['value'] = row.ominaisuudet.painotus
+            hashi[row.nimi]['id'] = row.id
+            hashi[row.nimi]['nimi'] = row.nimi
 
     return wrandom(hashi)
 
@@ -220,57 +198,25 @@ def wrandom(dick):
     return dick[choice]
 
 def decrease_cooldowns():
-    con = get_db()
-    cur = con.cursor()
 
-    cur.execute("UPDATE jaahyt SET kesto = kesto - 1")
-    cur.execute("DELETE FROM jaahyt WHERE kesto < 1")
-
-    con.commit()
+    q = Jaahy.update(kesto=Jaahy.kesto - 1).where(Jaahy.kesto > 0)
+    q.execute()
 
 def set_cooldown(id, cd):
-    con = get_db()
-    cur = con.cursor()
 
-    if dev:
-        cur.execute("""INSERT INTO jaahyt(paikka, kesto)
-        SELECT * FROM (SELECT ?, ?) AS tmp
-        WHERE NOT EXISTS (
-            SELECT paikka FROM jaahyt WHERE paikka = ?) LIMIT 1""", (id, cd, id))
-    else:
-        cur.execute("""INSERT INTO jaahyt(paikka, kesto)
-        SELECT * FROM (SELECT %s, %s) AS tmp
-        WHERE NOT EXISTS (
-            SELECT paikka FROM jaahyt WHERE paikka = %s) LIMIT 1""", (id, cd, id))
-
-    con.commit()
+    q = Jaahy.update(kesto=5).where(Jaahy.paikka==id)
+    q.execute()
 
 def reset_cd(id):
-    con = get_db()
-    cur = con.cursor()
 
-    if dev:
-        cur.execute("""DELETE FROM jaahyt
-        WHERE paikka=?""", (id,))
-    else:
-        cur.execute("""DELETE FROM jaahyt
-        WHERE paikka=%s""", (id,))
-
-    con.commit()
+    q = Jaahy.update(kesto=0).where(Jaahy.paikka==id)
+    q.execute()
 
 def data_to_json():
     rows = get_from_db()
-    the_d = defaultdict(dict)
+    ls = [row.to_json() for row in rows]
 
-    for row in rows:
-        the_d[row['nimi']]['tasalaatuisuus'] = row['tasalaatuisuus']
-        the_d[row['nimi']]['parkkipaikka'] = row['parkkipaikka']
-        the_d[row['nimi']]['palvelu'] = row['palvelu']
-        the_d[row['nimi']]['hinta'] = row['hinta']
-        the_d[row['nimi']]['bonus'] = row['bonus']
-        the_d[row['nimi']]['painotus'] = sum(the_d[row['nimi']].values())
-
-    return the_d
+    return ls
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

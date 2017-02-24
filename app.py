@@ -114,6 +114,14 @@ def reset():
     reset_cd(request.args.get('id'))
     return redirect(url_for('list_'))
 
+@app.route('/login, methods=['GET', 'POST']')
+def login():
+    if request.method == 'GET':
+        pass
+    else:
+        pass
+
+
 #################
 # API functions #
 #################

@@ -14,6 +14,7 @@ else:
     import psycopg2
     urllib.parse.uses_netloc.append('postgres')
     url = urllib.parse.urlparse(os.getenv('DATABASE_URL'))
+
     database = peewee.PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password,
                                          host=url.hostname, port=url.port)
 
@@ -129,6 +130,12 @@ class Jaahy(BaseModel):
         }
 
 if __name__ == "__main__":
+
+    try:
+        Kayttaja.create_table()
+    except peewee.OperationalError:
+        print("Kayttaja already exists")
+
     try:
         Paikka.create_table()
     except peewee.OperationalError:
@@ -136,10 +143,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(e)
 
-    try:
-        Kayttaja.create_table()
-    except peewee.OperationalError:
-        print("Kayttaja already exists")
 
     try:
         Etaisyys.create_table()

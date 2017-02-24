@@ -133,6 +133,8 @@ if __name__ == "__main__":
         Paikka.create_table()
     except peewee.OperationalError:
         print("Paikka already exists")
+    except Exception as e:
+        print(e)
 
     try:
         Kayttaja.create_table()

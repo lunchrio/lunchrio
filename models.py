@@ -8,8 +8,10 @@ dev = bool(os.getenv('DEV', False))
 if dev:
     database = peewee.SqliteDatabase("ruoka_orm.db")
 else:
+    from peewee import Proxy
     import urllib
     from urllib.parse import urlparse
+    import psycopg2
     urllib.parse.uses_netloc.append('postgres')
     url = urllib.parse.urlparse(os.getenv('DATABASE_URL'))
     database = peewee.PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password,

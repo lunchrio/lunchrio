@@ -154,3 +154,4 @@ if __name__ == "__main__":
     except peewee.OperationalError:
         print("Jaahy already exists")
 
+    database.commit()

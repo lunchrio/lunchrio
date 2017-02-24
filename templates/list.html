@@ -24,16 +24,16 @@
         {% for row in rows %}
         {# set score = row['tasalaatuisuus'] + row['parkkipaikka'] + row['palvelu']
         + row['hinta'] + row['bonus'] #}
-        {% set kesto = "<a href='/reset?id=%s' >%s</a>"|format(row['id'], row['kesto'])|safe if row['kesto'] is not none else '0' %}
+        {% set kesto = "<a href='/reset?id=%s' >%s</a>"|format(row.id, row.jaahyn_kesto)|safe if not row.jaahylla else '0' %}
         <tr>
             <td>{{ row.nimi }}</td>
-            <td>{{row.etaisyys.kaukana}}</td>
+            <td>{{row.etaisyys_suomeksi}}</td>
             <td>{{row.ominaisuudet.tasalaatuisuus}}</td>
-            <td>{{row['parkkipaikka']}}</td>
-            <td>{{row['palvelu']}}</td>
-            <td>{{row['hinta']}}</td>
-            <td>{{row['bonus']}}</td>
-            <td>{{ score }}</td>
+            <td>{{row.ominaisuudet.parkkipaikka}}</td>
+            <td>{{row.ominaisuudet.palvelu}}</td>
+            <td>{{row.ominaisuudet.hinta}}</td>
+            <td>{{row.ominaisuudet.bonus}}</td>
+            <td>{{ row.ominaisuudet.painotus }}</td>
             <td>{{ kesto }}</td>
             <td><a href="delete?id={{row['id']}}"><span class="glyphicon glyphicon-remove-circle"></span></a> </td>
         </tr>

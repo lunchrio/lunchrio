@@ -32,8 +32,22 @@ class Paikka(BaseModel):
         return self.etaisyys_.get()
 
     @property
-    def jaahy(self):
+    def etaisyys_suomeksi(self):
+        if self.etaisyys == True:
+            return 'Kaukana'
+        else:
+            return 'Lähellä'
+
+    @property
+    def jaahyn_kesto(self):
         return self.jaahy_.get()
+
+    @property
+    def jaahylla(self):
+        if self.jaahy_.select().count() == 0:
+            return True
+        else:
+            return False
 
 class Etaisyys(BaseModel):
     """
@@ -53,12 +67,22 @@ class Ominaisuudet(BaseModel):
     bonus = peewee.IntegerField()
     paikka = peewee.ForeignKeyField(Paikka, related_name="ominaisuudet_")
 
+    @property
+    def painotus(self):
+        return self.tasalaatuisuus + self.parkkipaikka + self.palvelu + self.hinta + self.bonus
+
 
 class Jaahy(BaseModel):
     """ORM model for Jaahy"""
     kesto = peewee.IntegerField()
     paikka = peewee.ForeignKeyField(Paikka, related_name="jaahy_")
 
+    @property
+    def empty(self):
+        if self.select().count() == 0:
+            return True
+        else:
+            return False
 
 if __name__ == "__main__":
     try:

@@ -173,16 +173,18 @@ def data_get():
     return jsonify(data_to_json())
 
 
-@app.route('/api/v1/arvo/normaali')
+@app.route('/api/v1/arvo/<nimi>/normaali')
 def arvo_normaali():
+    g.user = nimi
     voittaja = get_rand(None)
     voittaja.pop('threshold')
     voittaja.pop('value')
     return jsonify(voittaja)
 
 
-@app.route('/api/v1/arvo/kiirus')
+@app.route('/api/v1/arvo/<nimi>/kiirus')
 def arvo_kiirus():
+    g.user = nimi
     voittaja = get_rand(1)
     voittaja.pop('threshold')
     voittaja.pop('value')
@@ -233,12 +235,14 @@ def save_to_db(form):
 
 def get_from_db():
     return Kayttaja.get(nimi=g.user).paikat
+    
+# def get_paikat_for_user(nimi):
+    # return Kayttaha.get(nimi=nimi).paikat
 
 def delete_with_id(id):
     #p = Paikka.get(id=id)
     p = Kayttaja.get(nimi=g.user).paikat.where(Paikka.id==id).get()
     p.delete_instance(recursive=True)
-
 
 
 def get_rand(kiirus):

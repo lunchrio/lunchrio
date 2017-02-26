@@ -33,6 +33,7 @@ else:
 
 app = Flask(__name__)
 Bootstrap(app)
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rs'
 
 def add_response_headers(headers={}):
     """This decorator adds the headers passed in to the response"""
@@ -308,6 +309,6 @@ if __name__ == "__main__":
     handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
-    app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rs'
+
 
     app.run(host='0.0.0.0', port=5002, debug=True)

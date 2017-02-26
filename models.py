@@ -2,10 +2,15 @@
 
 import peewee
 import os
+import time
+
+
 
 dev = bool(os.getenv('DEV', False))
 
-if dev:
+#if dev:
+if 'DATABASE_URL' not in os.environ:
+    dev = True
     database = peewee.SqliteDatabase("ruoka_orm.db")
 else:
     from peewee import Proxy
@@ -32,6 +37,10 @@ class Kayttaja(BaseModel):
 
     def to_json(self):
         return {'nimi': self.nimi}
+    
+    # @property
+    # def paikat(self):
+        # return Paikka.select().where(Paikka.kayttaja == self)
 
 
 class Paikka(BaseModel):
@@ -129,6 +138,13 @@ class Jaahy(BaseModel):
             'kesto': self.kesto
         }
 
+class Salainen(BaseModel):
+    """ORM model for Salainen"""
+    hash = peewee.TextField()
+    suola = peewee.TextField()
+    kayttaja = peewee.ForeignKeyField(Kayttaja, related_name="salainen")
+    
+
 if __name__ == "__main__":
 
     try:
@@ -158,5 +174,10 @@ if __name__ == "__main__":
         Jaahy.create_table()
     except peewee.OperationalError:
         print("Jaahy already exists")
+        
+    try:
+        Salainen.create_table()
+    except peewee.OperationalError:
+        print("Salainen already exists")
 
     database.commit()

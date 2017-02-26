@@ -67,6 +67,16 @@
             <li><a href="/add">Lisää</a></li>
             <li><a href="/list">Lista</a></li>
           </ul>
+          {% if no_session != true %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout">Kirjaudu ulos</a></li>
+          </ul>
+          {% else %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/login">Kirjaudu sisään</a></li>
+            <li><a href="/register">Rekisteröidy</a></li>
+          </ul>
+          {% endif %}
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -76,5 +86,16 @@
 {% block content%}
 <div class="container">
 {% block mycontent %} {% endblock mycontent%}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-info">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 </div>
 {% endblock content%}

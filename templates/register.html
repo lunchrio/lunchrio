@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Rekisteröidy</h1>
+        <div class="form-group">
+            &nbsp;
+        </div>
+        <form action="/register" method="POST">
+          <div class="form-group form-inline">
+              <label class="col-md-2" for="username" >Käyttäjänimi:</label>
+              <input class="form-control" type="text" name="username" id="username" required>
+          </div>
+          <div class="form-group form-inline">
+              <label class="col-md-2" for="passu" >PIN koodi (4 numeroa):</label>
+              <input class="form-control" type="password" name="password" id="passu" required pattern="[0-9]{4}">
+          </div>
+            <div class="form-group">
+                &nbsp;
+            </div>
+            <input class="btn btn-primary" type="submit" name="submit" value="Rekisteröidy">
+        </form>
+        {% if request.args.error != undefined %}
+        <div class="form-group">
+          &nbsp;
+        </div>
+          <div class="alert alert-info">
+            {{ request.args.error }}
+          </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

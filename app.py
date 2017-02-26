@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
 from flask import Response, make_response
-from flask import render_template, request, redirect, url_for
-from flask import g
+from flask import render_template, request, redirect, url_for, flash
+from flask import g, session
 from flask import jsonify
 
 from flask_bootstrap import Bootstrap
 
-
+import hashlib
+import time
 import os
 import sqlite3
 from collections import defaultdict
@@ -17,11 +18,13 @@ from functools import wraps
 import logging
 from logging.handlers import RotatingFileHandler
 
-from models import Kayttaja, Paikka, Ominaisuudet, Etaisyys, Jaahy
+from models import Kayttaja, Paikka, Ominaisuudet, Etaisyys, Jaahy, Salainen
 
 dev = bool(os.getenv('DEV', False))
 
-if dev:
+#if dev:
+if 'DATABASE_URL' not in os.environ:
+    dev = True
     DATABASE = 'ruoka.db'
 else:
     import psycopg2
@@ -46,7 +49,7 @@ def add_response_headers(headers={}):
 
 
 def apiheaders(f):
-    """This decorator passes X-Robots-Tag: noindex"""
+    """This decorator passes Content-Type: application/json"""
     @wraps(f)
     @add_response_headers({'Content-type': 'application/json'})
     def decorated_function(*args, **kwargs):
@@ -56,9 +59,9 @@ def apiheaders(f):
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if request.cookies.get('username') is None:
+        if 'username' not in session:
             return redirect(url_for('login', next=request.url))
-        g.user = request.cookies.get('username')
+        g.user = session['username']
         return f(*args, **kwargs)
     return decorated_function
 
@@ -127,25 +130,39 @@ def set_cd(id):
 
 @app.route('/reset')
 @login_required
-def reset():
-    reset_cd(request.args.get('id'))
+def reset(): 
+    reset_cd(request.args.get('id')) 
     return redirect(url_for('list_'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', no_session=True)
     else:
         g.user = request.form.get('username')
-        app.logger.info(request.form.get('username'))
-        if user_exists():
+        if user_exists(g.user, request.form.get('password')):
             response = redirect(url_for('index'))
-            response.set_cookie('username', value=request.form.get('username'))
+            session['username'] = request.form.get('username')
         else:
-            response = redirect(url_for('login'))
+            #flash("Error, no such user exists") 
+            response = redirect(url_for('login', error="Käyttäjänimi tai PIN ei täsmää."))
+ 
+        return response  
 
-        return response
-
+@app.route('/logout', methods=['GET'])
+def logout():
+    response = redirect(url_for('login'))
+    session.pop('username', None)
+    return response
+ 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html', no_session=True)
+    else:
+        register_user(request.form)
+        return redirect(url_for('login', error="Kokeile kirjautua sisään uusilla tunnuksillasi."))
+        
 #################
 # API functions #
 #################
@@ -171,12 +188,38 @@ def arvo_kiirus():
     return jsonify(voittaja)
 
 
-def user_exists(username):
-    yritys = Kayttaja.select().where(Kayttaja.nimi == username)
+def user_exists(username, passu):
+    try:
+        k = Kayttaja.get(nimi=username)
+        s = k.salainen.get()
+        suola = s.suola
+        pansuola = suola + passu
+        m = hashlib.sha256()
+        m.update(bytes(pansuola, encoding="utf-8")) 
+        hassu = m.digest()
+        if hassu == s.hash:
+            return True
+        else:
+            return False
+    except:
+        return False
 
 
+def register_user(form):
+    u = Kayttaja(nimi=form.get('username'))
+    passu = form.get('password')
+    suola = str(time.time())
+    pansuola = suola + passu
+    app.logger.info(pansuola)
+    m = hashlib.sha256()
+    m.update(bytes(pansuola, encoding="utf-8")) 
+    hassu = m.digest()
+    s = Salainen(hash=hassu, suola=suola, kayttaja=u)
+    u.save()
+    s.save()
+        
 def save_to_db(form):
-    p = Paikka(nimi=form.get('name'), kayttaja=Kayttaja.get(id=1))
+    p = Paikka(nimi=form.get('name'), kayttaja=Kayttaja.get(nimi=g.user))
     k = Etaisyys(kaukana=(form.get('kaukana') or False), paikka=p)
     o = Ominaisuudet(tasalaatuisuus=form.get('laatu'), parkkipaikka=form.get('parkki'), bonus=form.get('bonus'),
                      hinta=form.get('hinta'), palvelu=form.get('palvelu'), paikka=p)
@@ -188,12 +231,11 @@ def save_to_db(form):
     j.save()
 
 def get_from_db():
-
-    return Paikka.select()
+    return Kayttaja.get(nimi=g.user).paikat
 
 def delete_with_id(id):
-
-    p = Paikka.get(id=id)
+    #p = Paikka.get(id=id)
+    p = Kayttaja.get(nimi=g.user).paikat.where(Paikka.id==id).get()
     p.delete_instance(recursive=True)
 
 
@@ -235,18 +277,23 @@ def wrandom(dick):
 
 def decrease_cooldowns():
 
-    q = Jaahy.update(kesto=Jaahy.kesto - 1).where(Jaahy.kesto > 0)
-    q.execute()
+    paikat = Kayttaja.get(nimi=g.user).paikat
+    for paikka in paikat:
+        j = paikka.jaahy_.get()
+        if j.kesto > 0:
+            j.kesto -= 1
+            j.save()
+        # q.execute()
 
 def set_cooldown(id, cd):
-
-    q = Jaahy.update(kesto=5).where(Jaahy.paikka==id)
-    q.execute()
+    if Jaahy.get(id=id).paikka.kayttaja.nimi == g.user:
+        q = Jaahy.update(kesto=5).where(Jaahy.paikka==id)
+        q.execute()
 
 def reset_cd(id):
-
-    q = Jaahy.update(kesto=0).where(Jaahy.paikka==id)
-    q.execute()
+    if Jaahy.get(id=id).paikka.kayttaja.nimi == g.user:
+        q = Jaahy.update(kesto=0).where(Jaahy.paikka==id)
+        q.execute()
 
 def data_to_json():
     rows = get_from_db()
@@ -261,5 +308,6 @@ if __name__ == "__main__":
     handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1)
     handler.setLevel(logging.INFO)
     app.logger.addHandler(handler)
+    app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rs'
 
-    app.run(host='127.0.0.1', port=5002, debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)

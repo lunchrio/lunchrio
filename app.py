@@ -52,6 +52,14 @@ def apiheaders(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if request.cookies.get('username') is None:
+            return redirect(url_for('login', next=request.url))
+        g.user = request.cookies.get('username')
+        return f(*args, **kwargs)
+    return decorated_function
 
 def get_db():
     if dev:
@@ -71,7 +79,9 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+
 @app.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
     if request.method == 'GET':
         return render_template("index.html")
@@ -83,6 +93,7 @@ def index():
         return render_template("rand.html", voittaja=winner)
         
 @app.route('/add', methods=['GET', 'POST'])
+@login_required
 def add():
     if request.method == 'GET':
         return render_template("add.html", method='GET')
@@ -91,36 +102,48 @@ def add():
         return render_template("add.html", method='POST', values=request.form)
 
 @app.route('/delete', methods=['GET'])
+@login_required
 def delete():
     delete_with_id(request.args.get('id'))
     return redirect(url_for('list_'))
 
 @app.route('/list')
+@login_required
 def list_():
     return render_template("list.html", rows=get_from_db())
 
 @app.route('/update')
+@login_required
 def update():
     decrease_cooldowns()
     return redirect(url_for('list_'))
 
 @app.route('/setcd/<int:id>')
+@login_required
 def set_cd(id):
     set_cooldown(id, 5)
     return redirect(url_for('list_'))
 
 @app.route('/reset')
+@login_required
 def reset():
     reset_cd(request.args.get('id'))
     return redirect(url_for('list_'))
 
-@app.route('/login, methods=['GET', 'POST']')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        pass
+        return render_template('login.html')
     else:
-        pass
+        g.user = request.form.get('username')
+        app.logger.info(request.form.get('username'))
+        if user_exists():
+            response = redirect(url_for('index'))
+            response.set_cookie('username', value=request.form.get('username'))
+        else:
+            response = redirect(url_for('login'))
 
+        return response
 
 #################
 # API functions #
@@ -145,6 +168,10 @@ def arvo_kiirus():
     voittaja.pop('threshold')
     voittaja.pop('value')
     return jsonify(voittaja)
+
+
+def user_exists(username):
+    yritys = Kayttaja.select().where(Kayttaja.nimi == username)
 
 
 def save_to_db(form):

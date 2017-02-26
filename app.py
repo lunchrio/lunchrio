@@ -174,7 +174,7 @@ def data_get():
 
 
 @app.route('/api/v1/arvo/<nimi>/normaali')
-def arvo_normaali():
+def arvo_normaali(nimi):
     g.user = nimi
     voittaja = get_rand(None)
     voittaja.pop('threshold')
@@ -183,7 +183,7 @@ def arvo_normaali():
 
 
 @app.route('/api/v1/arvo/<nimi>/kiirus')
-def arvo_kiirus():
+def arvo_kiirus(nimi):
     g.user = nimi
     voittaja = get_rand(1)
     voittaja.pop('threshold')

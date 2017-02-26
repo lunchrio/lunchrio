@@ -196,7 +196,7 @@ def user_exists(username, passu):
         pansuola = suola + passu
         m = hashlib.sha256()
         m.update(bytes(pansuola, encoding="utf-8")) 
-        hassu = m.digest()
+        hassu = m.hexdigest()
         if hassu == s.hash:
             return True
         else:
@@ -213,7 +213,7 @@ def register_user(form):
     app.logger.info(pansuola)
     m = hashlib.sha256()
     m.update(bytes(pansuola, encoding="utf-8")) 
-    hassu = m.digest()
+    hassu = m.hexdigest()
     s = Salainen(hash=hassu, suola=suola, kayttaja=u)
     u.save()
     s.save()

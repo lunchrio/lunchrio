@@ -33,7 +33,7 @@ else:
 
 app = Flask(__name__)
 Bootstrap(app)
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rs'
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rs'  
 
 def add_response_headers(headers={}):
     """This decorator adds the headers passed in to the response"""

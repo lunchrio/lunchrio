@@ -17,3 +17,8 @@ body {
 .glyphicon-info-sign:hover {
     cursor:help;
 }
+
+#rekkaa {
+    background-color: #bacfef;
+    padding: 10px;
+}

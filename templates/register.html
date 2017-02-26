@@ -3,6 +3,7 @@
 
 {% block content %}
     <div class="container">
+    <div id="rekkaa" class="img-rounded">
         <h1>Rekisteröidy</h1>
         <div class="form-group">
             &nbsp;
@@ -21,6 +22,10 @@
             </div>
             <input class="btn btn-primary" type="submit" name="submit" value="Rekisteröidy">
         </form>
+            <div class="form-group">
+                &nbsp;
+            </div>
+        </div>
         {% if request.args.error != undefined %}
         <div class="form-group">
           &nbsp;
@@ -29,6 +34,7 @@
             {{ request.args.error }}
           </div>
         {% endif %}
+        
     </div>
 
 {% endblock %}

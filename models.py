@@ -85,6 +85,7 @@ class Paikka(BaseModel):
                 'id': self.id
                 }
 
+# class Historia
 
 class Etaisyys(BaseModel):
     """

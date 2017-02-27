@@ -2,7 +2,7 @@
 
 import peewee
 import os
-import time
+import datetime
 
 
 
@@ -85,8 +85,15 @@ class Paikka(BaseModel):
                 'id': self.id
                 }
 
-# class Historia
-# test
+class Historia(BaseModel):
+    """
+    ORM Model for Historia
+    """
+    otsikko = peewee.TextField()
+    aika = peewee.DateTimeField(default=datetime.datetime.now())
+    kayttaja = peewee.ForeignKeyField(Kayttaja, related_name="historia")
+
+
 
 class Etaisyys(BaseModel):
     """

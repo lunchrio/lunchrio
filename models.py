@@ -86,6 +86,7 @@ class Paikka(BaseModel):
                 }
 
 # class Historia
+# test
 
 class Etaisyys(BaseModel):
     """

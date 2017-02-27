@@ -179,6 +179,7 @@ def arvo_normaali(nimi):
     voittaja = get_rand(None)
     voittaja.pop('threshold')
     voittaja.pop('value')
+    set_cooldown(voittaja['id'], 5)
     return jsonify(voittaja)
 
 
@@ -188,6 +189,7 @@ def arvo_kiirus(nimi):
     voittaja = get_rand(1)
     voittaja.pop('threshold')
     voittaja.pop('value')
+    set_cooldown(voittaja['id'], 5)
     return jsonify(voittaja)
 
 

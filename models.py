@@ -90,6 +90,7 @@ class Historia(BaseModel):
     ORM Model for Historia
     """
     otsikko = peewee.TextField()
+    teksti = peewee.TextField(null=True)
     aika = peewee.DateTimeField(default=datetime.datetime.now())
     kayttaja = peewee.ForeignKeyField(Kayttaja, related_name="historia")
 
@@ -183,9 +184,14 @@ if __name__ == "__main__":
     #     Jaahy.create_table()
     # except peewee.OperationalError:
     #     print("Jaahy already exists")
-        
+    #
+    # try:
+    #     Salainen.create_table()
+    # except peewee.OperationalError:
+    #     print("Salainen already exists")
+
     try:
-        Salainen.create_table()
+        Historia.create_table()
     except peewee.OperationalError:
         print("Salainen already exists")
 

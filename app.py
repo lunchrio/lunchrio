@@ -202,7 +202,7 @@ def arvo_kiirus(nimi):
 @app.route('/feed/<nimi>')
 def anna_feedi(nimi):
     #g.user = nimi
-    h = Historia.select().where(kayttaja=nimi).get()
+    h = Historia.select().where(Historia.kayttaja == nimi).get()
     return "{}".format(h.otsikko)
 
 

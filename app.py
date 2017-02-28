@@ -4,8 +4,9 @@ from flask import Response, make_response
 from flask import render_template, request, redirect, url_for, flash
 from flask import g, session
 from flask import jsonify
-
 from flask_bootstrap import Bootstrap
+from werkzeug.contrib.atom import AtomFeed
+
 
 import hashlib
 import time
@@ -202,8 +203,23 @@ def arvo_kiirus(nimi):
 @app.route('/feed/<nimi>')
 def anna_feedi(nimi):
     #g.user = nimi
-    h = Historia.select().where(Historia.kayttaja == Kayttaja.get(nimi=nimi)).get()
-    return "{}".format(h.otsikko)
+    historiat = Historia.select().where(Historia.kayttaja == Kayttaja.get(nimi=nimi))
+    #itemit = []
+
+    feed = AtomFeed('Lnchrio', feed_url=request.url, url=request.url_root)
+
+    for h in historiat:
+        feed.add(h.otsikko, published=h.aika, id=h.id, url=request.url_root + 'historia/' + str(h.id),
+                 author=nimi, updated=h.aika)
+
+    return feed.get_response()
+
+@app.route("/historia/<id>")
+def historia_yksi(id):
+    h = Historia.get(id=id)
+    return h.otsikko
+
+
 
 
 def lisaa_historiaan(kayttaja, paikka):

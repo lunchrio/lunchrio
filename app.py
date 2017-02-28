@@ -14,11 +14,12 @@ import sqlite3
 from collections import defaultdict
 import random
 from functools import wraps
+import datetime
 
 import logging
 from logging.handlers import RotatingFileHandler
 
-from models import Kayttaja, Paikka, Ominaisuudet, Etaisyys, Jaahy, Salainen
+from models import Kayttaja, Paikka, Ominaisuudet, Etaisyys, Jaahy, Salainen, Historia
 
 dev = bool(os.getenv('DEV', False))
 
@@ -183,7 +184,6 @@ def arvo_normaali(nimi):
     set_cooldown(voittaja['id'], 5)
     return jsonify(voittaja)
 
-
 @app.route('/api/v1/arvo/<nimi>/kiirus')
 def arvo_kiirus(nimi):
     g.user = nimi
@@ -193,6 +193,24 @@ def arvo_kiirus(nimi):
     decrease_cooldowns()
     set_cooldown(voittaja['id'], 5)
     return jsonify(voittaja)
+
+#################
+#      RSS      #
+#################
+
+@app.route('/feed/<nimi>')
+def anna_feedi(nimi):
+    #g.user = nimi
+    h = Historia.select().where(kayttaja=nimi).get()
+    return "{}".format(h.otsikko)
+
+
+def lisaa_historiaan(kayttaja, paikka):
+    k = Kayttaja.get(nimi=kayttaja)
+    nyt = datetime.datetime.now()
+    otsikko = "{0} - {1}".format(nyt.strftime('%d.%m.%Y'), paikka)
+    h = Historia(kayttaja=k, aika=nyt, otsikko=otsikko)
+    h.save()
 
 
 def user_exists(username, passu):

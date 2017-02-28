@@ -156,33 +156,33 @@ class Salainen(BaseModel):
 
 if __name__ == "__main__":
 
-    try:
-        Kayttaja.create_table()
-    except peewee.OperationalError:
-        print("Kayttaja already exists")
-
-    try:
-        Paikka.create_table()
-    except peewee.OperationalError:
-        print("Paikka already exists")
-    except Exception as e:
-        print(e)
-
-
-    try:
-        Etaisyys.create_table()
-    except peewee.OperationalError:
-        print("Etaisyys already exists")
-
-    try:
-        Ominaisuudet.create_table()
-    except peewee.OperationalError:
-        print("Ominaisuudet already exists")
-
-    try:
-        Jaahy.create_table()
-    except peewee.OperationalError:
-        print("Jaahy already exists")
+    # try:
+    #     Kayttaja.create_table()
+    # except peewee.OperationalError:
+    #     print("Kayttaja already exists")
+    #
+    # try:
+    #     Paikka.create_table()
+    # except peewee.OperationalError:
+    #     print("Paikka already exists")
+    # except Exception as e:
+    #     print(e)
+    #
+    #
+    # try:
+    #     Etaisyys.create_table()
+    # except peewee.OperationalError:
+    #     print("Etaisyys already exists")
+    #
+    # try:
+    #     Ominaisuudet.create_table()
+    # except peewee.OperationalError:
+    #     print("Ominaisuudet already exists")
+    #
+    # try:
+    #     Jaahy.create_table()
+    # except peewee.OperationalError:
+    #     print("Jaahy already exists")
         
     try:
         Salainen.create_table()

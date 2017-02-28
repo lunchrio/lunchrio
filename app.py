@@ -184,6 +184,7 @@ def arvo_normaali(nimi):
     voittaja.pop('value')
     decrease_cooldowns()
     set_cooldown(voittaja['id'], 5)
+    lisaa_historiaan(g.user, voittaja['nimi'])
     return jsonify(voittaja)
 
 @app.route('/api/v1/arvo/<nimi>/kiirus')
@@ -194,6 +195,7 @@ def arvo_kiirus(nimi):
     voittaja.pop('value')   
     decrease_cooldowns()
     set_cooldown(voittaja['id'], 5)
+    lisaa_historiaan(g.user, voittaja['nimi'])
     return jsonify(voittaja)
 
 #################
@@ -202,10 +204,7 @@ def arvo_kiirus(nimi):
 
 @app.route('/feed/<nimi>')
 def anna_feedi(nimi):
-    #g.user = nimi
     historiat = Historia.select().where(Historia.kayttaja == Kayttaja.get(nimi=nimi))
-    #itemit = []
-
     feed = AtomFeed('Lnchrio', feed_url=request.url, url=request.url_root)
 
     for h in historiat:

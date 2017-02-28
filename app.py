@@ -95,6 +95,7 @@ def index():
         winner = get_rand(request.form.get('kiirus'))
         decrease_cooldowns()
         set_cooldown(winner['id'], 5)
+        lisaa_historiaan(g.user, winner['nimi'])
 
         return render_template("rand.html", voittaja=winner)
         
